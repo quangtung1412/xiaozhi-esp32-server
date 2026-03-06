@@ -158,6 +158,15 @@ main/manager-web/node_modules
 
 # model files
 main/xiaozhi-server/models/SenseVoiceSmall/model.pt
+
+# deploy/ - runtime data (không commit, được tạo khi chạy)
+deploy/mysql/data/*
+!deploy/mysql/data/.gitkeep
+deploy/uploadfile/*
+!deploy/uploadfile/.gitkeep
+
+# deploy/ - model file quá lớn, tải riêng trên server
+deploy/models/SenseVoiceSmall/model.pt
 main/xiaozhi-server/models/sherpa-onnx*
 /main/xiaozhi-server/audio_ref/
 /audio_ref/
