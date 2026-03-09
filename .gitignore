@@ -156,6 +156,9 @@ main/manager-web/node_modules
 .private_config.yaml
 .env.development
 
+# Deploy config template được commit (không có secret)
+!deploy/data/.config.yaml.template
+
 # model files
 main/xiaozhi-server/models/SenseVoiceSmall/model.pt
 

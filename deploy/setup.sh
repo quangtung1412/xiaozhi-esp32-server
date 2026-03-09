@@ -134,6 +134,16 @@ download_model() {
 # =============================================================
 update_config() {
     CONFIG_FILE="${DEPLOY_DIR}/data/.config.yaml"
+    TEMPLATE_FILE="${DEPLOY_DIR}/data/.config.yaml.template"
+
+    # Tự động tạo .config.yaml từ template nếu chưa tồn tại
+    if [ ! -f "${CONFIG_FILE}" ]; then
+        if [ ! -f "${TEMPLATE_FILE}" ]; then
+            error "Không tìm thấy template: ${TEMPLATE_FILE}"
+        fi
+        cp "${TEMPLATE_FILE}" "${CONFIG_FILE}"
+        info "Đã tạo config từ template: ${CONFIG_FILE}"
+    fi
 
     if grep -q "REPLACE_WITH_YOUR_SERVER_SECRET" "${CONFIG_FILE}" 2>/dev/null; then
         warn "Chưa điền server.secret vào ${CONFIG_FILE}"

@@ -1,0 +1,28 @@
+# ============================================================
+# Config template cho chế độ Full Stack (Server + Web + DB)
+# ============================================================
+# HƯỚNG DẪN:
+# 1. Chạy: docker compose -f docker-compose_all.yml up -d
+# 2. Mở trình duyệt: http://<IP-SERVER>:8002  => Đăng ký tài khoản admin đầu tiên
+# 3. Vào menu [参数管理], tìm [server.secret], copy giá trị
+# 4. Dán giá trị vào trường "secret" bên dưới
+# 5. Restart: docker compose -f docker-compose_all.yml restart xiaozhi-esp32-server
+# ============================================================
+# LƯU Ý: Sau khi điền secret thật, KHÔNG commit file này lên git
+
+server:
+  ip: 0.0.0.0
+  port: 8000
+  http_port: 8003
+  # Thay <YOUR_SERVER_IP> bằng IP LAN của Ubuntu server
+  # Lấy IP bằng lệnh: hostname -I | awk '{print $1}'
+  vision_explain: http://<YOUR_SERVER_IP>:8003/mcp/vision/explain
+
+manager-api:
+  # Giữ nguyên tên service Docker (không đổi thành IP)
+  url: http://xiaozhi-esp32-server-web:8002/xiaozhi
+  # Điền server.secret lấy từ Web Dashboard (bước 3 ở trên)
+  secret: REPLACE_WITH_YOUR_SERVER_SECRET
+
+# Default system prompt template
+prompt_template: agent-base-prompt.txt
