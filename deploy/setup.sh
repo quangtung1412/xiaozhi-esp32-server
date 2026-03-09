@@ -60,17 +60,36 @@ install_docker() {
 build_images() {
     info "=== Bắt đầu build Docker images từ source ==="
 
-    info "[1/3] Build server-base image (Python + dependencies)..."
-    docker build -t xiaozhi-esp32-server:server-base -f ./Dockerfile-server-base .
+    # Bật BuildKit để dùng cache mount (tăng tốc npm + maven)
+    export DOCKER_BUILDKIT=1
 
-    info "[2/3] Build server image (Python app)..."
+    # ---- server image ----
+    # Dockerfile-server dùng base image từ ghcr.io (pull tự động, không cần build lại)
+    # => Chỉ build lại khi code Python thay đổi (~5 giây)
+    info "[1/2] Build server image (Python app — chỉ copy files, rất nhanh)..."
     docker build -t xiaozhi-esp32-server:server_latest -f ./Dockerfile-server .
 
-    info "[3/3] Build web image (Vue + Java)..."
+    # ---- web image ----
+    # Lần đầu: ~10 phút (npm install + mvn download)
+    # Lần sau: ~1-2 phút nhờ BuildKit cache mount
+    info "[2/2] Build web image (Vue + Java — lần đầu chậm, lần sau dùng cache)..."
     docker build -t xiaozhi-esp32-server:web_latest -f ./Dockerfile-web .
 
     info "=== Build xong! ==="
     docker images | grep xiaozhi-esp32-server
+}
+
+# =============================================================
+# Rebuild nhanh chỉ server (dùng sau khi sửa code Python)
+# =============================================================
+rebuild_server_only() {
+    info "Rebuild server image (nhanh ~5 giây)..."
+    export DOCKER_BUILDKIT=1
+    docker build -t xiaozhi-esp32-server:server_latest -f ./Dockerfile-server .
+    cd deploy
+    docker compose -f docker-compose_all.yml restart xiaozhi-esp32-server
+    cd ..
+    info "Restart xong!"
 }
 
 # =============================================================
