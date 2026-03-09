@@ -1,7 +1,6 @@
 # Deploy full stack với local images (build từ source)
 # Sử dụng: docker compose -f docker-compose_all.yml up -d
 
-version: '3'
 services:
   # Server module (Python WebSocket)
   xiaozhi-esp32-server:
